@@ -1,0 +1,222 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f4f6f8;
+  color: #333;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+.app {
+  width: 90%;
+  max-width: 700px;
+  margin: 40px auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.app-header h1 {
+  margin: 0 0 10px;
+  font-size: 32px;
+}
+
+.app-header p {
+  margin: 0;
+  color: #666;
+}
+
+.form-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.form-container h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #555;
+}
+
+.add-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #333;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.add-button:hover {
+  background-color: #555;
+}
+
+.list-container {
+  margin-top: 20px;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.list-header h2 {
+  margin: 0;
+}
+
+.contact-count {
+  background-color: #eee;
+  padding: 6px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+}
+
+.contact-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.contact-info h3 {
+  margin: 0 0 5px;
+}
+
+.contact-info p {
+  margin: 0;
+  color: #666;
+}
+
+.delete-button {
+  padding: 9px 14px;
+  border: none;
+  border-radius: 6px;
+  background-color: #d9534f;
+  color: white;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #c9302c;
+}
+
+.empty-message {
+  text-align: center;
+  padding: 30px;
+  color: #777;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+}
+
+.empty-message p {
+  margin: 5px 0;
+}
+
+.loader {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f6f8;
+}
+
+.loader h2 {
+  margin-bottom: 5px;
+}
+
+.loader p {
+  color: #666;
+}
+
+.loader-spinner {
+  width: 45px;
+  height: 45px;
+  border: 5px solid #ddd;
+  border-top: 5px solid #333;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .app {
+    width: 95%;
+    margin: 20px auto;
+    padding: 20px;
+  }
+
+  .app-header h1 {
+    font-size: 26px;
+  }
+
+  .contact-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .delete-button {
+    width: 100%;
+  }
+
+  .list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
