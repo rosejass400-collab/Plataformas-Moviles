@@ -220,3 +220,11 @@ input {
     gap: 10px;
   }
 }
+
+  .contacts-image {
+    display: block;
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    margin: 20px auto;
+}

@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useEffect, useState } from "react";
 import ContactList from "./components/ContactList";
 import ContactForm from "./components/ContactForm";
+import contactosImage from "./assets/contactos.png";
 import "./App.css";
 
 function App() {
@@ -49,6 +51,12 @@ function App() {
         <h1>Mis Contactos</h1>
         <p>Administra tu lista de contactos</p>
       </header>
+
+      <img
+        src={contactosImage}
+        alt="Mis contactos"
+        className="contacts-image"
+      />
 
       <main>
         <ContactForm onAdd={addContact} />
