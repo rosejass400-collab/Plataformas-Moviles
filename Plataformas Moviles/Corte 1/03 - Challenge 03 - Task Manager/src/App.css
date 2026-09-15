@@ -1,0 +1,33 @@
+.app {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+.empty-message {
+  text-align: center;
+  color: #666;
+  margin-top: 30px;
+}
+
+ion-list {
+  margin-top: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+ion-item {
+  margin-bottom: 5px;
+}
+
+ion-label {
+  font-size: 17px;
+}
+
+ion-button {
+  margin-top: 10px;
+}

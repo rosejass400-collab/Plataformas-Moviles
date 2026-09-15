@@ -1,0 +1,10 @@
+.perfil-container {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.perfil-avatar {
+  width: 100px;
+  height: 100px;
+  margin: 20px auto;
+}
