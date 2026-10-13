@@ -1,0 +1,48 @@
+
+.bienvenida {
+  text-align: center;
+  padding: 24px 12px 12px;
+}
+
+.bienvenida h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.bienvenida p {
+  color: #596579;
+  font-size: 16px;
+}
+
+.sensor-card {
+  border-radius: 14px;
+  margin-bottom: 16px;
+}
+
+.sensor-card ion-card-header {
+  align-items: center;
+  text-align: center;
+}
+
+.sensor-card ion-card-content {
+  text-align: center;
+}
+
+.sensor-card ion-card-content p {
+  margin-bottom: 18px;
+}
+
+.sensor-icono {
+  font-size: 34px;
+  color: var(--ion-color-primary);
+  margin-bottom: 10px;
+}
+
+.detalle-sensor {
+  padding: 20px;
+}
+
+.detalle-sensor h2 {
+  margin-top: 24px;
+}
