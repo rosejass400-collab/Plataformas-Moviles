@@ -1,0 +1,8 @@
+﻿import { useEffect, useState } from 'react';
+import { IonButton, IonContent, IonHeader, IonInput, IonItem, IonList, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { subscribeToChat, sendChatMessage } from '../../services/chatService.js';
+import { useAuth } from '../../hooks/useAuth.js';
+export default function Chat() { const { user } = useAuth(); const [messages,setMessages]=useState([]); const [text,setText]=useState('');
+ useEffect(()=>{ if(!user)return; return subscribeToChat(user.uid,setMessages); },[user]);
+ const send=async()=>{if(!text.trim()||!user)return; await sendChatMessage(user.uid,text.trim(),user.email); setText('');};
+ return <IonPage><IonHeader><IonToolbar><IonTitle>Chat de soporte</IonTitle></IonToolbar></IonHeader><IonContent className="ion-padding">{!user?<div className="notice">Inicia sesión desde Perfil para usar el chat en tiempo real.</div>:<><div className="notice">Conversación sincronizada con Cloud Firestore.</div><IonList>{messages.length===0?<IonItem>Escribe tu primer mensaje al equipo EcoMarket.</IonItem>:messages.map(m=><IonItem key={m.id} className={m.senderId===user.uid?'mine':''}><b>{m.senderId===user.uid?'Tú':'EcoMarket'}: </b>&nbsp;{m.text}</IonItem>)}</IonList><div className="chat-input"><IonInput value={text} placeholder="Escribe un mensaje" onIonInput={e=>setText(e.detail.value||'')}/><IonButton onClick={send}>Enviar</IonButton></div></>}</IonContent></IonPage>; }
