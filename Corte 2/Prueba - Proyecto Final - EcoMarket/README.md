@@ -1,4 +1,4 @@
-﻿# EcoMarket
+# EcoMarket
 
 Aplicación móvil de comercio sostenible desarrollada con Ionic, React y Capacitor. Permite explorar productos locales, agregar artículos al carrito, iniciar sesión, registrar pedidos y comunicarse con soporte mediante chat en tiempo real.
 
@@ -15,7 +15,9 @@ Aplicación móvil de comercio sostenible desarrollada con Ionic, React y Capaci
 
 ## Configuración local
 1. Copiar `.env.example` a `.env` y completar la configuración web de Firebase.
-2. Guardar `google-services.json` en `android/app/`.
-3. Ejecutar `pnpm install`, `pnpm build` y `npx cap sync android`.
+2. En Firebase Console → Authentication → Sign-in method, habilitar el proveedor **Anónimo** para el acceso de prueba (acepta cualquier alias, no valida correo ni contraseña).
+3. Publicar las reglas de Cloud Firestore para usuarios autenticados; las cuentas anónimas también tienen UID autenticado.
+4. Guardar `google-services.json` en `android/app/` si se usan servicios nativos de Google.
+5. Ejecutar `pnpm install`, `pnpm build` y `npx cap sync android`.
 
 Los archivos `.env`, `google-services.json`, certificados y configuraciones locales de Android no se versionan.

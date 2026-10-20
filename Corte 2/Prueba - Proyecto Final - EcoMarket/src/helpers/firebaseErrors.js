@@ -7,7 +7,7 @@ const messages = {
   'auth/wrong-password': 'Contraseña incorrecta.',
   'auth/network-request-failed': 'Sin conexión con Firebase. Revisa internet e intenta de nuevo.',
   'auth/too-many-requests': 'Demasiados intentos. Espera un momento y vuelve a intentarlo.',
-  'auth/operation-not-allowed': 'Habilita Correo electrónico/contraseña en Firebase Authentication.',
+  'auth/operation-not-allowed': 'Habilita el proveedor Anónimo en Firebase Authentication → Sign-in method para el modo de prueba.',
   'auth/unauthorized-domain': 'Añade localhost a los dominios autorizados en Firebase Authentication.'
 };
 export function explainFirebaseError(error) {
