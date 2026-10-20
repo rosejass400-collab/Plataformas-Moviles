@@ -1,0 +1,3 @@
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import CardItem from '../../components/CardItem/CardItem.jsx'; import { demoProducts } from '../../data/demoProducts.js';
+export default function Home() { return <IonPage><IonHeader><IonToolbar><IonTitle>EcoMarket</IonTitle></IonToolbar></IonHeader><IonContent className="ion-padding"><section className="hero"><span>COMPRA CON PROPÓSITO</span><h1>Productos que cuidan tu hogar y el planeta.</h1><p>Conecta con productores locales y elige alternativas sostenibles.</p></section><h2 className="section-title">Destacados para ti</h2><div className="product-grid">{demoProducts.map(product => <CardItem key={product.id} product={product}/>)}</div></IonContent></IonPage>; }
