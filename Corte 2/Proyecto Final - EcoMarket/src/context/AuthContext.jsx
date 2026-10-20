@@ -1,11 +1,11 @@
-﻿import { createContext, useEffect, useMemo, useState } from 'react';
+﻿import { useEffect, useMemo, useState } from 'react';
+import { AuthContext } from './AuthContext.js';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth, firebaseEnabled } from '../config/firebase.js';
 
-export const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null); const [loading, setLoading] = useState(firebaseEnabled);
-  useEffect(() => { if (!auth) { setLoading(false); return; } return onAuthStateChanged(auth, user => { setUser(user); setLoading(false); }); }, []);
+  useEffect(() => { if (!auth) return undefined; return onAuthStateChanged(auth, nextUser => { setUser(nextUser); setLoading(false); }); }, []);
   const value = useMemo(() => ({ user, loading, firebaseEnabled,
     login: (email, password) => signInWithEmailAndPassword(auth, email, password),
     register: (email, password) => createUserWithEmailAndPassword(auth, email, password),
