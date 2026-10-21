@@ -11,11 +11,13 @@
 - Tres pruebas unitarias aprobadas; lint sin errores; compilación web y sincronización de Capacitor exitosas.
 - La comparación con la versión base no muestra cambios en Challenge 07.
 
+- Compilación publicada en Netlify y reclamada en la cuenta del usuario: https://challenge08-jasson-rosero.netlify.app/.
+
 ## Pendientes o límites
 
 - Prueba con dos cuentas distintas para comprobar aislamiento de tareas y archivos en vivo. Las políticas están definidas en SQL y el acceso sin sesión ya se comprobó.
 - Captura física con cámara y ejecución en Android: requieren dispositivo/permisos. La selección y carga de imagen en navegador sí se comprobó.
-- Enlace público definitivo y prueba de confirmación de correo desde ese origen.
+- Prueba de confirmación de correo desde el origen publicado; hay que configurar Site URL en Supabase.
 - Subida de los últimos cambios e integración de la rama en `main`.
 
 La compilación informa un aviso por tamaño del archivo JavaScript principal. No impide generar la app.

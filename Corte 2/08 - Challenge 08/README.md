@@ -2,6 +2,12 @@
 
 Aplicación de tareas personales para Desarrollo de Plataformas Móviles. Usa React, componentes Ionic, Capacitor y Supabase. La interfaz combina azul oscuro, naranja y fondo gris claro.
 
+## Aplicación web
+
+[Probar Mis pendientes](https://challenge08-jasson-rosero.netlify.app/)
+
+Cada persona debe crear su cuenta o iniciar sesión con la que ya tenga en este proyecto.
+
 ## Funciones
 
 - Registro, confirmación por correo e inicio/cierre de sesión.
