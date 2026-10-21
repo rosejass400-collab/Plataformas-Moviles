@@ -1,4 +1,7 @@
 -- Esquema del Challenge 08. Se puede ejecutar más de una vez en Supabase SQL Editor.
+-- Ejecutar en el proyecto dedicado a Challenge 08.
+begin;
+
 create table if not exists public.tareas (
   id bigint generated always as identity primary key,
   titulo text not null check (char_length(trim(titulo)) between 1 and 120),
@@ -8,6 +11,13 @@ create table if not exists public.tareas (
 );
 
 alter table public.tareas enable row level security;
+
+-- Los permisos de tabla permiten operar; las políticas limitan las filas por usuario.
+revoke all on public.tareas from anon;
+grant usage on schema public to authenticated;
+grant select, insert, update, delete on public.tareas to authenticated;
+grant usage, select on sequence public.tareas_id_seq to authenticated;
+create index if not exists tareas_user_id_idx on public.tareas (user_id);
 
 drop policy if exists "Cada usuario ve sus tareas" on public.tareas;
 create policy "Cada usuario ve sus tareas" on public.tareas
@@ -71,3 +81,5 @@ create policy "Cada usuario elimina su avatar" on storage.objects
     bucket_id = 'avatars'
     and (storage.foldername(name))[1] = (select auth.uid())::text
   );
+
+commit;

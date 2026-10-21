@@ -16,6 +16,7 @@
     "@capacitor/camera": "^8.2.5",
     "@capacitor/cli": "^8.5.3",
     "@capacitor/core": "^8.5.3",
+    "@ionic/pwa-elements": "^3.4.0",
     "@ionic/react": "^9.0.7",
     "@ionic/react-router": "^9.0.7",
     "@supabase/supabase-js": "^2.95.3",

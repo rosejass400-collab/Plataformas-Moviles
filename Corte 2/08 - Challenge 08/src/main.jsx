@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { setupIonicReact } from '@ionic/react';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
 
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -18,6 +19,7 @@ import './index.css';
 import App from './App.jsx';
 
 setupIonicReact();
+defineCustomElements(window);
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
