@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function validMission(entry, id) {
+      return entry is map
+        && entry.keys().hasAll(['id', 'completed'])
+        && entry.keys().hasOnly(['id', 'completed'])
+        && entry.id == id
+        && entry.completed is bool;
+    }
+
+    function completedBefore(data, index) {
+      return data.missions is list
+        ? data.missions[index].completed
+        : (index == 0 ? data.missions.photo
+          : (index == 1 ? data.missions.movement : data.missions.still));
+    }
+
+    function validProfile(data) {
+      return data.keys().hasAll(['displayName', 'points', 'missions', 'updatedAt'])
+        && data.keys().hasOnly(['displayName', 'points', 'missions', 'updatedAt'])
+        && data.displayName is string
+        && data.displayName.size() >= 1
+        && data.displayName.size() <= 40
+        && data.missions is list
+        && data.missions.size() == 3
+        && validMission(data.missions[0], 1)
+        && validMission(data.missions[1], 2)
+        && validMission(data.missions[2], 3)
+        && (!data.missions[2].completed || data.missions[1].completed)
+        && data.points is int
+        && data.points == (data.missions[0].completed ? 30 : 0)
+          + (data.missions[1].completed ? 50 : 0)
+          + (data.missions[2].completed ? 40 : 0);
+    }
+
+    match /profiles/{userId} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.auth.uid == userId
+        && validProfile(request.resource.data)
+        && request.resource.data.points == 0;
+      allow update: if signedIn()
+        && request.auth.uid == userId
+        && validProfile(request.resource.data)
+        && (!completedBefore(resource.data, 0) || request.resource.data.missions[0].completed)
+        && (!completedBefore(resource.data, 1) || request.resource.data.missions[1].completed)
+        && (!completedBefore(resource.data, 2) || request.resource.data.missions[2].completed);
+      allow delete: if false;
+    }
+  }
+}

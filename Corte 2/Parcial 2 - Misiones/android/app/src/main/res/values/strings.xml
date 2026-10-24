@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Parcial 2 Misiones</string>
+    <string name="title_activity_main">Parcial 2 Misiones</string>
+    <string name="package_name">com.jasson.parcial2misiones</string>
+    <string name="custom_url_scheme">com.jasson.parcial2misiones</string>
+</resources>
