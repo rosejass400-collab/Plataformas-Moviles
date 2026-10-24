@@ -1,0 +1,40 @@
+{
+  "name": "parcial-2-misiones",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/camera": "^8.2.5",
+    "@capacitor/cli": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/geolocation": "^8.2.3",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/local-notifications": "^8.3.1",
+    "@capacitor/motion": "^8.0.1",
+    "@ionic/pwa-elements": "^3.4.0",
+    "@ionic/react": "^9.0.7",
+    "firebase": "^12.19.0",
+    "ionicons": "^8.1.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "eslint": "^10.10.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.6",
+    "globals": "^17.12.0",
+    "vite": "^8.3.0"
+  }
+}
