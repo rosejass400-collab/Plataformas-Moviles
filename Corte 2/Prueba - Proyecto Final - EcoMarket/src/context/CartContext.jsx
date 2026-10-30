@@ -1,6 +1,6 @@
-import { createContext, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { CartContext } from './CartContext.js';
 
-export const CartContext = createContext(null);
 const CART_KEY = 'ecomarket-cart';
 
 export function CartProvider({ children }) {
