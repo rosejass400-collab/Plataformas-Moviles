@@ -95,13 +95,13 @@ export default function Addresses() {
           {error && <div className="notice error">{error}</div>}
           <IonList className="address-form">
             <IonItem>
-              <IonInput label="Nombre de quien recibe" autocomplete="name" value={recipient} onIonInput={event => setRecipient(event.detail.value || '')} />
+              <IonInput label="Nombre de quien recibe" labelPlacement="stacked" autocomplete="name" value={recipient} onIonInput={event => setRecipient(event.detail.value || '')} />
             </IonItem>
             <IonItem>
-              <IonInput label="Dirección" autocomplete="street-address" value={street} onIonInput={event => setStreet(event.detail.value || '')} />
+              <IonInput label="Dirección" labelPlacement="stacked" autocomplete="street-address" value={street} onIonInput={event => setStreet(event.detail.value || '')} />
             </IonItem>
             <IonItem>
-              <IonTextarea label="Indicaciones adicionales (opcional)" autoGrow value={details} onIonInput={event => setDetails(event.detail.value || '')} />
+              <IonTextarea label="Indicaciones de entrega (opcional)" labelPlacement="stacked" autoGrow value={details} onIonInput={event => setDetails(event.detail.value || '')} />
             </IonItem>
           </IonList>
           <IonButton expand="block" disabled={saving} onClick={saveAddress}>
