@@ -40,10 +40,10 @@ export default function Profile() {
             <p>Sesión de prueba activa</p>
           </div>
           <IonList>
-            <IonItem><IonLabel>Mis pedidos</IonLabel></IonItem>
-            <IonItem><IonLabel>Direcciones de entrega</IonLabel></IonItem>
-            <IonItem button routerLink="/native"><IonLabel>Funciones nativas</IonLabel></IonItem>
-            <IonItem button routerLink="/admin"><IonLabel>Panel administrador</IonLabel></IonItem>
+            <IonItem button detail routerLink="/orders"><IonLabel>Mis pedidos</IonLabel></IonItem>
+            <IonItem button detail routerLink="/addresses"><IonLabel>Direcciones de entrega</IonLabel></IonItem>
+            <IonItem button detail routerLink="/native"><IonLabel>Funciones nativas</IonLabel></IonItem>
+            <IonItem button detail routerLink="/admin"><IonLabel>Panel administrador</IonLabel></IonItem>
           </IonList>
           <IonButton expand="block" fill="outline" onClick={logout}>Cerrar sesión</IonButton>
         </> : <>
