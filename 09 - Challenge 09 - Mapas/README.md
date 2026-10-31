@@ -4,7 +4,7 @@ Aplicación Ionic + React + Capacitor para registrar recorridos con GPS y verlos
 
 ## Funciones
 
-- Ubicación actual y estado de conexión Wi-Fi/datos.
+- Ubicación actual al abrir la app y estado de conexión Wi-Fi/datos.
 - Registro de trayectos con pausa automática al estar quieto y reanudación al moverse.
 - Vibración al iniciar y parada al bajar del 15 % de batería.
 - Avisos locales por falta de conexión, quietud prolongada o movimiento rápido.
@@ -30,6 +30,7 @@ npx cap open android
 ```
 
 El GPS, la vibración, la cámara y las notificaciones se usan desde el dispositivo Android. El seguimiento funciona con la app abierta.
+Al abrir la app se solicita ubicación y el mapa se centra en la posición obtenida. Si se cancela la cámara con Atrás, no se guarda ninguna foto.
 
 ## OpenCage
 

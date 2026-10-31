@@ -19,6 +19,8 @@ export default function App() {
   const tracking = useTracking();
   const trackingRef = useRef(tracking);
   useEffect(() => { trackingRef.current = tracking; }, [tracking]);
+  const autoLocateStartedRef = useRef(false);
+  const [locating, setLocating] = useState(true);
   const [page, setPage] = useState('map');
   const [apiKey, setApiKey] = useState(() => localStorage.getItem('opencageKey') || '');
   const [search, setSearch] = useState('parque');
@@ -27,6 +29,12 @@ export default function App() {
   const [photo, setPhoto] = useState('');
   const [busy, setBusy] = useState('');
   const [notice, setNotice] = useState('');
+
+  useEffect(() => {
+    if (autoLocateStartedRef.current) return;
+    autoLocateStartedRef.current = true;
+    tracking.locate().finally(() => setLocating(false));
+  }, [tracking]);
 
   useEffect(() => {
     const listener = CapacitorApp.addListener('appRestoredResult', async (event) => {
@@ -59,7 +67,8 @@ export default function App() {
       setNotice('Foto guardada con ubicación y fecha.');
     } catch (error) {
       localStorage.removeItem('pendingPhotoPosition');
-      setNotice(`No se pudo guardar la foto: ${error.message}`);
+      const detail = error?.message || String(error);
+      setNotice(/cancel|no image picked/i.test(detail) ? 'Foto cancelada.' : `No se pudo guardar la foto: ${detail}`);
     } finally { setBusy(''); }
   }
 
@@ -97,7 +106,7 @@ export default function App() {
           {page === 'map' ? <div className="stack">
             <IonCard className="panel map-card"><IonCardHeader><IonCardTitle>Ubicación actual</IonCardTitle></IonCardHeader><IonCardContent>
               <MapPanel position={tracking.position} points={tracking.status === 'idle' ? [] : tracking.session?.points || []} places={places} />
-              <div className="map-foot"><span>{tracking.position ? `${tracking.position.lat.toFixed(6)}, ${tracking.position.lng.toFixed(6)}` : 'Pulsa «Ubicarme» para comenzar'}</span><span>{tracking.position ? `Precisión ${formatDistance(tracking.position.accuracy)}` : ''}</span></div>
+              <div className="map-foot"><span>{tracking.position ? `${tracking.position.lat.toFixed(6)}, ${tracking.position.lng.toFixed(6)}` : locating ? 'Buscando tu ubicación…' : 'Pulsa «Ubicarme» para reintentar'}</span><span>{tracking.position ? `Precisión ${formatDistance(tracking.position.accuracy)}` : ''}</span></div>
             </IonCardContent></IonCard>
             <div className="two-col">
               <IonCard className="panel"><IonCardHeader><IonCardTitle>Seguimiento</IonCardTitle></IonCardHeader><IonCardContent>
@@ -106,7 +115,7 @@ export default function App() {
                 <div className="actions"><IonButton fill="outline" onClick={tracking.locate}>Ubicarme</IonButton>{tracking.status === 'idle' ? <IonButton onClick={tracking.start}>Iniciar recorrido</IonButton> : <IonButton color="danger" onClick={() => tracking.stop()}>Detener y guardar</IonButton>}</div>
               </IonCardContent></IonCard>
               <IonCard className="panel"><IonCardHeader><IonCardTitle>Foto con ubicación</IonCardTitle></IonCardHeader><IonCardContent>
-                <p>La cámara agrega las coordenadas y la fecha sobre la imagen.</p>
+                <p>La cámara agrega las coordenadas y la fecha sobre la imagen. Para cancelar, usa Atrás en el celular.</p>
                 <IonButton fill="outline" disabled={busy === 'photo'} onClick={capture}>{busy === 'photo' ? 'Abriendo cámara…' : 'Tomar foto'}</IonButton>
                 {photo && <img className="captured-photo" src={photo} alt="Foto con coordenadas" />}
               </IonCardContent></IonCard>
