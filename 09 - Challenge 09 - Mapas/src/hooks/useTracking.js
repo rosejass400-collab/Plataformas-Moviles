@@ -42,6 +42,7 @@ export function useTracking() {
   const processingRef = useRef(false);
   const stoppingRef = useRef(false);
   const resumingRef = useRef(false);
+  const foregroundRef = useRef(true);
 
   useEffect(() => {
     loadTracks().then((tracks) => {
@@ -130,7 +131,7 @@ export function useTracking() {
 
   async function handlePosition(result, error) {
     if (error) { setMessage(`GPS: ${error.message || 'No se pudo leer la posición.'}`); return; }
-    if (!result || !sessionRef.current || processingRef.current) return;
+    if (!result || !sessionRef.current || !foregroundRef.current || processingRef.current) return;
     processingRef.current = true;
     try {
       const next = pointFromPosition(result);
@@ -181,6 +182,7 @@ export function useTracking() {
   }
 
   async function startMonitoring() {
+    if (!foregroundRef.current) return false;
     try {
       motionRef.current = await Motion.addListener('accel', (event) => {
         const acceleration = event.acceleration || {};
@@ -200,8 +202,9 @@ export function useTracking() {
       if (!network.connected) await notifyOnce('offline', 'Sin conexión', 'El recorrido sigue guardándose en este dispositivo.', 180000);
     } catch { /* La falta de red no detiene el recorrido local. */ }
     watchRef.current = await Geolocation.watchPosition({ enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }, handlePosition);
+    if (!foregroundRef.current) { await stopMonitoring(); return false; }
     timerRef.current = setInterval(async () => {
-      if (!sessionRef.current || stoppingRef.current) return;
+      if (!sessionRef.current || !foregroundRef.current || stoppingRef.current) return;
       const idle = Date.now() - Math.max(lastMovementRef.current, lastMotionRef.current);
       if (idle >= 20000) setStatus('paused');
       if (idle >= 120000) await notifyOnce('still', 'Sigues en el mismo lugar', 'El recorrido se reanudará cuando vuelvas a moverte.', 120000);
@@ -211,10 +214,12 @@ export function useTracking() {
         await stop('Seguimiento detenido por batería baja.');
       }
     }, 5000);
+    return true;
   }
 
   async function start() {
     if (sessionRef.current) return;
+    foregroundRef.current = true;
     setMessage('');
     try {
       const battery = await Device.getBatteryInfo().catch(() => ({}));
@@ -222,6 +227,7 @@ export function useTracking() {
         throw new Error('La batería está por debajo del 15 %. Cárgala antes de iniciar.');
       }
       const first = await getPosition();
+      if (!foregroundRef.current) throw new Error('Regresa a la app para iniciar el recorrido.');
       const id = `${Date.now()}`;
       const track = { id, date: localDate(), startedAt: new Date().toISOString(), endedAt: null, meters: 0, points: [first], photos: [] };
       await saveTrack(track);
@@ -232,7 +238,10 @@ export function useTracking() {
       lastMovementRef.current = Date.now();
       try { await LocalNotifications.requestPermissions(); } catch { /* Opcional en el navegador. */ }
       try { await Haptics.vibrate({ duration: 250 }); } catch { /* Algunos equipos no vibran. */ }
-      await startMonitoring();
+      if (!await startMonitoring()) {
+        setStatus('interrupted');
+        setMessage('Recorrido en pausa. Reanúdalo al volver a la app.');
+      }
     } catch (error) {
       setMessage(error.message || 'No se pudo iniciar el seguimiento.');
       if (sessionRef.current) await stop('No se pudo iniciar el GPS.');
@@ -240,6 +249,7 @@ export function useTracking() {
   }
 
   async function pauseForBackground() {
+    foregroundRef.current = false;
     if (!sessionRef.current) return;
     await stopMonitoring();
     setStatus('interrupted');
@@ -248,6 +258,7 @@ export function useTracking() {
 
   async function resume() {
     if (!sessionRef.current || watchRef.current || resumingRef.current) return;
+    foregroundRef.current = true;
     resumingRef.current = true;
     setMessage('');
     try {
@@ -256,6 +267,7 @@ export function useTracking() {
         throw new Error('La batería está por debajo del 15 %. Guarda el recorrido y carga el celular.');
       }
       const current = await getPosition();
+      if (!foregroundRef.current) throw new Error('El recorrido sigue en pausa. Regresa a la app para reanudarlo.');
       const track = sessionRef.current;
       const updated = {
         ...track,
@@ -267,7 +279,7 @@ export function useTracking() {
       setSession(updated);
       lastMotionRef.current = Date.now();
       lastMovementRef.current = Date.now();
-      await startMonitoring();
+      if (!await startMonitoring()) throw new Error('El recorrido sigue en pausa. Regresa a la app para reanudarlo.');
       setStatus('tracking');
       setMessage('Recorrido reanudado. El tramo sin seguimiento no se suma a la distancia.');
     } catch (error) {
