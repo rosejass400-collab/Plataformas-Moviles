@@ -113,7 +113,7 @@ export default function App() {
             </div>
             <IonCard className="panel"><IonCardHeader><IonCardTitle>Dirección y lugares cercanos</IonCardTitle></IonCardHeader><IonCardContent>
               <p>Consulta OpenCage con una clave propia. La clave queda guardada solo en este dispositivo.</p>
-              <IonItem lines="none"><IonInput label="Clave OpenCage" labelPlacement="stacked" type="password" value={apiKey} placeholder="Pega tu clave aquí" onIonInput={(event) => setApiKey(event.detail.value || '')} /></IonItem>
+              <IonItem lines="none"><IonInput label="Clave OpenCage" labelPlacement="stacked" type="password" value={apiKey} placeholder="Pega tu clave aquí" onIonInput={(event) => { const value = event.detail.value || ''; setApiKey(value); localStorage.setItem('opencageKey', value); }} /></IonItem>
               <IonItem lines="none"><IonInput label="Lugar que buscas" labelPlacement="stacked" value={search} placeholder="Ej. parque o farmacia" onIonInput={(event) => setSearch(event.detail.value || '')} /></IonItem>
               <IonButton disabled={busy === 'places' || !apiKey.trim()} onClick={searchPlaces}>{busy === 'places' ? 'Buscando…' : 'Consultar cerca de mí'}</IonButton>
               {address && <p><strong>Dirección:</strong> {address}</p>}
