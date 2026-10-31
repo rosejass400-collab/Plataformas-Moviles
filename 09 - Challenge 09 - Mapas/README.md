@@ -29,7 +29,7 @@ npx cap sync android
 npx cap open android
 ```
 
-El GPS, la vibración, la cámara y las notificaciones se usan desde el dispositivo Android. El seguimiento funciona con la app abierta.
+El GPS, la vibración, la cámara y las notificaciones se usan desde el dispositivo Android. El seguimiento funciona con la app abierta. Al salir de la app se pausa; al regresar se puede reanudar sin perder los puntos ya guardados. El tramo durante el que estuvo cerrada no se suma a la distancia.
 Al abrir la app se solicita ubicación y el mapa se centra en la posición obtenida. Si se cancela la cámara con Atrás, no se guarda ninguna foto.
 
 ## OpenCage

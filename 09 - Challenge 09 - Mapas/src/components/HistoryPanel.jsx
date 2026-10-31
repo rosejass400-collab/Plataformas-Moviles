@@ -32,9 +32,9 @@ export default function HistoryPanel({ history }) {
       {selected && <IonCard className="panel">
         <IonCardHeader><IonCardTitle>Recorrido de las {new Date(selected.startedAt).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}</IonCardTitle></IonCardHeader>
         <IonCardContent>
-          <div className="badges"><IonBadge>{formatDistance(selected.meters || 0)}</IonBadge><IonBadge color="medium">{selected.points.length} puntos GPS</IonBadge><IonBadge color="medium">{selected.photos?.length || 0} fotos</IonBadge></div>
+          <div className="badges"><IonBadge>{formatDistance(selected.meters || 0)}</IonBadge><IonBadge color="medium">{selected.points.length} puntos GPS</IonBadge><IonBadge color="medium">{selected.photos?.length || 0} fotos</IonBadge>{!selected.endedAt && <IonBadge color="warning">En pausa</IonBadge>}</div>
           <p>Archivo JSON guardado en el almacenamiento privado de la app.</p>
-          <MapPanel points={selected.points} />
+          <MapPanel points={selected.points} breaks={selected.breaks || []} />
           <div className="photo-grid">{selected.photos?.map((photo) => <HistoryPhoto key={photo.path} path={photo.path} />)}</div>
         </IonCardContent>
       </IonCard>}

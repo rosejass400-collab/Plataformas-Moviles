@@ -13,7 +13,7 @@ import { findNearby, lookupPlace } from './services/places';
 import { takeWatermarkedPhoto, watermarkPhotoResult } from './services/photo';
 import { savePhoto } from './services/storage';
 
-const STATUS = { idle: 'Sin seguimiento', tracking: 'Registrando', paused: 'Pausa por quietud' };
+const STATUS = { idle: 'Sin seguimiento', tracking: 'Registrando', paused: 'Pausa por quietud', interrupted: 'Recorrido en pausa' };
 
 export default function App() {
   const tracking = useTracking();
@@ -35,6 +35,13 @@ export default function App() {
     autoLocateStartedRef.current = true;
     tracking.locate().finally(() => setLocating(false));
   }, [tracking]);
+
+  useEffect(() => {
+    const listener = CapacitorApp.addListener('appStateChange', ({ isActive }) => {
+      if (!isActive) trackingRef.current.pauseForBackground();
+    });
+    return () => { listener.then((handle) => handle.remove()); };
+  }, []);
 
   useEffect(() => {
     const listener = CapacitorApp.addListener('appRestoredResult', async (event) => {
@@ -105,14 +112,14 @@ export default function App() {
           {notice && <p className="message">{notice}</p>}
           {page === 'map' ? <div className="stack">
             <IonCard className="panel map-card"><IonCardHeader><IonCardTitle>Ubicación actual</IonCardTitle></IonCardHeader><IonCardContent>
-              <MapPanel position={tracking.position} points={tracking.status === 'idle' ? [] : tracking.session?.points || []} places={places} />
+              <MapPanel position={tracking.position} points={tracking.status === 'idle' ? [] : tracking.session?.points || []} breaks={tracking.session?.breaks || []} places={places} />
               <div className="map-foot"><span>{tracking.position ? `${tracking.position.lat.toFixed(6)}, ${tracking.position.lng.toFixed(6)}` : locating ? 'Buscando tu ubicación…' : 'Pulsa «Ubicarme» para reintentar'}</span><span>{tracking.position ? `Precisión ${formatDistance(tracking.position.accuracy)}` : ''}</span></div>
             </IonCardContent></IonCard>
             <div className="two-col">
               <IonCard className="panel"><IonCardHeader><IonCardTitle>Seguimiento</IonCardTitle></IonCardHeader><IonCardContent>
-                <p>El recorrido se pausa si permaneces quieto y continúa al moverte. Se detiene si la batería baja del 15 %.</p>
+                <p>El recorrido se pausa si permaneces quieto. Si sales de la app, queda en pausa para reanudarlo al volver. Se detiene si la batería baja del 15 %.</p>
                 <div className="stats"><strong>{formatDistance(tracking.status === 'idle' ? 0 : tracking.session?.meters || 0)}</strong><span>{tracking.status === 'idle' ? 0 : tracking.session?.points.length || 0} puntos GPS</span></div>
-                <div className="actions"><IonButton fill="outline" onClick={tracking.locate}>Ubicarme</IonButton>{tracking.status === 'idle' ? <IonButton onClick={tracking.start}>Iniciar recorrido</IonButton> : <IonButton color="danger" onClick={() => tracking.stop()}>Detener y guardar</IonButton>}</div>
+                <div className="actions"><IonButton fill="outline" onClick={tracking.locate}>Ubicarme</IonButton>{tracking.status === 'idle' ? <IonButton onClick={tracking.start}>Iniciar recorrido</IonButton> : <>{tracking.status === 'interrupted' && <IonButton onClick={tracking.resume}>Reanudar recorrido</IonButton>}<IonButton color="danger" onClick={() => tracking.stop()}>Detener y guardar</IonButton></>}</div>
               </IonCardContent></IonCard>
               <IonCard className="panel"><IonCardHeader><IonCardTitle>Foto con ubicación</IonCardTitle></IonCardHeader><IonCardContent>
                 <p>La cámara agrega las coordenadas y la fecha sobre la imagen. Para cancelar, usa Atrás en el celular.</p>

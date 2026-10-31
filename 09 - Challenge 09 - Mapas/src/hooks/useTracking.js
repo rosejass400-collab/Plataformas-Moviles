@@ -41,9 +41,20 @@ export function useTracking() {
   const lastNoticesRef = useRef({});
   const processingRef = useRef(false);
   const stoppingRef = useRef(false);
+  const resumingRef = useRef(false);
 
   useEffect(() => {
-    loadTracks().then(setHistory).catch((error) => setMessage(`No se pudo leer el historial: ${error.message}`));
+    loadTracks().then((tracks) => {
+      setHistory(tracks);
+      const unfinished = tracks.find((track) => !track.endedAt);
+      if (unfinished && !sessionRef.current) {
+        sessionRef.current = unfinished;
+        setSession(unfinished);
+        setPosition(unfinished.points.at(-1) || null);
+        setStatus('interrupted');
+        setMessage('Recorrido recuperado. Puedes reanudarlo o detenerlo y guardarlo.');
+      }
+    }).catch((error) => setMessage(`No se pudo leer el historial: ${error.message}`));
     Network.getStatus().then((value) => { setConnected(value.connected); setConnectionType(value.connectionType); }).catch(() => {});
     return () => {
       if (watchRef.current) Geolocation.clearWatch({ id: watchRef.current }).catch(() => {});
@@ -84,20 +95,25 @@ export function useTracking() {
     catch (error) { setMessage(error.message || 'No fue posible obtener la ubicación.'); return null; }
   }
 
+  async function stopMonitoring() {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = null;
+    if (watchRef.current) {
+      const watchId = watchRef.current;
+      watchRef.current = null;
+      await Geolocation.clearWatch({ id: watchId }).catch(() => {});
+    }
+    await motionRef.current?.remove().catch(() => {});
+    await networkRef.current?.remove().catch(() => {});
+    motionRef.current = null;
+    networkRef.current = null;
+  }
+
   async function stop(reason = '') {
     if (stoppingRef.current || !sessionRef.current) return;
     stoppingRef.current = true;
     try {
-      if (timerRef.current) clearInterval(timerRef.current);
-      timerRef.current = null;
-      if (watchRef.current) {
-        await Geolocation.clearWatch({ id: watchRef.current }).catch(() => {});
-        watchRef.current = null;
-      }
-      await motionRef.current?.remove().catch(() => {});
-      await networkRef.current?.remove().catch(() => {});
-      motionRef.current = null;
-      networkRef.current = null;
+      await stopMonitoring();
       const finalTrack = { ...sessionRef.current, endedAt: new Date().toISOString(), stopReason: reason };
       await saveTrack(finalTrack);
       setHistory(await loadTracks());
@@ -164,6 +180,39 @@ export function useTracking() {
     }
   }
 
+  async function startMonitoring() {
+    try {
+      motionRef.current = await Motion.addListener('accel', (event) => {
+        const acceleration = event.acceleration || {};
+        const magnitude = Math.hypot(acceleration.x || 0, acceleration.y || 0, acceleration.z || 0);
+        if (magnitude > 0.7) lastMotionRef.current = Date.now();
+      });
+    } catch { /* El GPS permite continuar aunque falte acelerómetro. */ }
+    try {
+      networkRef.current = await Network.addListener('networkStatusChange', (value) => {
+        setConnected(value.connected);
+        setConnectionType(value.connectionType);
+        if (!value.connected) notifyOnce('offline', 'Sin conexión', 'El recorrido sigue guardándose en este dispositivo.', 180000);
+      });
+      const network = await Network.getStatus();
+      setConnected(network.connected);
+      setConnectionType(network.connectionType);
+      if (!network.connected) await notifyOnce('offline', 'Sin conexión', 'El recorrido sigue guardándose en este dispositivo.', 180000);
+    } catch { /* La falta de red no detiene el recorrido local. */ }
+    watchRef.current = await Geolocation.watchPosition({ enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }, handlePosition);
+    timerRef.current = setInterval(async () => {
+      if (!sessionRef.current || stoppingRef.current) return;
+      const idle = Date.now() - Math.max(lastMovementRef.current, lastMotionRef.current);
+      if (idle >= 20000) setStatus('paused');
+      if (idle >= 120000) await notifyOnce('still', 'Sigues en el mismo lugar', 'El recorrido se reanudará cuando vuelvas a moverte.', 120000);
+      const currentBattery = await Device.getBatteryInfo().catch(() => ({}));
+      if (currentBattery.batteryLevel !== undefined && currentBattery.batteryLevel !== null && currentBattery.batteryLevel <= 0.15 && !currentBattery.isCharging) {
+        await notifyOnce('battery', 'Seguimiento detenido', 'La batería está baja.');
+        await stop('Seguimiento detenido por batería baja.');
+      }
+    }, 5000);
+  }
+
   async function start() {
     if (sessionRef.current) return;
     setMessage('');
@@ -183,39 +232,50 @@ export function useTracking() {
       lastMovementRef.current = Date.now();
       try { await LocalNotifications.requestPermissions(); } catch { /* Opcional en el navegador. */ }
       try { await Haptics.vibrate({ duration: 250 }); } catch { /* Algunos equipos no vibran. */ }
-      try {
-        motionRef.current = await Motion.addListener('accel', (event) => {
-          const acceleration = event.acceleration || {};
-          const magnitude = Math.hypot(acceleration.x || 0, acceleration.y || 0, acceleration.z || 0);
-          if (magnitude > 0.7) lastMotionRef.current = Date.now();
-        });
-      } catch { /* El GPS permite continuar aunque falte acelerómetro. */ }
-      try {
-        networkRef.current = await Network.addListener('networkStatusChange', (value) => {
-          setConnected(value.connected);
-          setConnectionType(value.connectionType);
-          if (!value.connected) notifyOnce('offline', 'Sin conexión', 'El recorrido sigue guardándose en este dispositivo.', 180000);
-        });
-        const network = await Network.getStatus();
-        setConnected(network.connected);
-        setConnectionType(network.connectionType);
-        if (!network.connected) await notifyOnce('offline', 'Sin conexión', 'El recorrido sigue guardándose en este dispositivo.', 180000);
-      } catch { /* La falta de red no detiene el recorrido local. */ }
-      watchRef.current = await Geolocation.watchPosition({ enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }, handlePosition);
-      timerRef.current = setInterval(async () => {
-        if (!sessionRef.current || stoppingRef.current) return;
-        const idle = Date.now() - Math.max(lastMovementRef.current, lastMotionRef.current);
-        if (idle >= 20000) setStatus('paused');
-        if (idle >= 120000) await notifyOnce('still', 'Sigues en el mismo lugar', 'El recorrido se reanudará cuando vuelvas a moverte.', 120000);
-        const currentBattery = await Device.getBatteryInfo().catch(() => ({}));
-        if (currentBattery.batteryLevel !== undefined && currentBattery.batteryLevel !== null && currentBattery.batteryLevel <= 0.15 && !currentBattery.isCharging) {
-          await notifyOnce('battery', 'Seguimiento detenido', 'La batería está baja.');
-          await stop('Seguimiento detenido por batería baja.');
-        }
-      }, 5000);
+      await startMonitoring();
     } catch (error) {
       setMessage(error.message || 'No se pudo iniciar el seguimiento.');
       if (sessionRef.current) await stop('No se pudo iniciar el GPS.');
+    }
+  }
+
+  async function pauseForBackground() {
+    if (!sessionRef.current) return;
+    await stopMonitoring();
+    setStatus('interrupted');
+    setMessage('Recorrido en pausa. Reanúdalo al volver a la app.');
+  }
+
+  async function resume() {
+    if (!sessionRef.current || watchRef.current || resumingRef.current) return;
+    resumingRef.current = true;
+    setMessage('');
+    try {
+      const battery = await Device.getBatteryInfo().catch(() => ({}));
+      if (battery.batteryLevel !== undefined && battery.batteryLevel !== null && battery.batteryLevel <= 0.15 && !battery.isCharging) {
+        throw new Error('La batería está por debajo del 15 %. Guarda el recorrido y carga el celular.');
+      }
+      const current = await getPosition();
+      const track = sessionRef.current;
+      const updated = {
+        ...track,
+        points: [...track.points, current],
+        breaks: [...(track.breaks || []), track.points.length],
+      };
+      await saveTrack(updated);
+      sessionRef.current = updated;
+      setSession(updated);
+      lastMotionRef.current = Date.now();
+      lastMovementRef.current = Date.now();
+      await startMonitoring();
+      setStatus('tracking');
+      setMessage('Recorrido reanudado. El tramo sin seguimiento no se suma a la distancia.');
+    } catch (error) {
+      await stopMonitoring();
+      setStatus('interrupted');
+      setMessage(error.message || 'No se pudo reanudar el recorrido.');
+    } finally {
+      resumingRef.current = false;
     }
   }
 
@@ -235,5 +295,5 @@ export function useTracking() {
     if (!active) setHistory(await loadTracks());
   }
 
-  return { position, session, history, status, connected, connectionType, message, setMessage, locate, start, stop, addPhoto };
+  return { position, session, history, status, connected, connectionType, message, setMessage, locate, start, stop, resume, pauseForBackground, addPhoto };
 }
