@@ -1,0 +1,65 @@
+:root {
+  --ion-color-primary: #164957;
+  --ion-color-primary-rgb: 22, 73, 87;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-shade: #133f4d;
+  --ion-color-primary-tint: #2d5b68;
+  --ion-color-success: #426d55;
+  --ion-color-success-rgb: 66, 109, 85;
+  --ion-color-success-contrast: #fff;
+  --ion-color-success-shade: #3a604b;
+  --ion-color-success-tint: #557c66;
+  --ion-background-color: #f5f3ed;
+  --ion-text-color: #17323a;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body { background: #f5f3ed; }
+ion-content { --background: #f5f3ed; }
+.topbar { --background: #164957; --color: white; --min-height: 62px; }
+.topbar ion-title { font-size: 1.08rem; font-weight: 700; }
+.topbar ion-title span { font-weight: 400; opacity: 0.78; }
+.layout { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 30px 0 58px; }
+.intro { display: flex; justify-content: space-between; gap: 20px; align-items: center; margin-bottom: 24px; }
+.intro h1 { margin: 3px 0 7px; font-size: clamp(2rem, 5vw, 3.3rem); letter-spacing: -0.05em; line-height: 1.1; }
+.intro p { margin: 0; color: #5c7379; }
+.eyebrow { color: #b14e34 !important; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.15em; }
+.status-stack { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; white-space: nowrap; color: #5c7379; font-size: 0.85rem; }
+.status-stack ion-badge { padding: 9px 12px; font-size: 0.8rem; }
+ion-segment { margin-bottom: 20px; --background: #e9e7de; max-width: 340px; border-radius: 12px; }
+ion-segment-button { --indicator-color: #fff; --color-checked: #17323a; text-transform: none; font-weight: 700; }
+.stack { display: grid; gap: 18px; }
+.two-col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.panel { margin: 0; box-shadow: none; border: 1px solid #dce2df; border-radius: 17px; background: #fff; }
+.panel ion-card-header { padding-bottom: 8px; }
+.panel ion-card-title { font-size: 1.15rem; font-weight: 750; color: #17323a; }
+.panel ion-card-content { color: #607076; }
+.panel p { line-height: 1.5; }
+.map-frame { height: min(47vh, 420px); min-height: 290px; border-radius: 12px; overflow: hidden; border: 1px solid #e0e4e0; }
+.map-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding-top: 12px; font-size: 0.86rem; }
+.stats { display: flex; align-items: baseline; gap: 12px; margin: 20px 0; }
+.stats strong { font-size: 2.2rem; letter-spacing: -0.05em; color: #b14e34; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.actions ion-button { margin: 0; }
+.captured-photo { display: block; width: 100%; max-height: 300px; object-fit: contain; margin-top: 16px; border-radius: 10px; background: #e6ebea; }
+ion-item { --padding-start: 0; --inner-padding-end: 0; --background: transparent; margin-bottom: 7px; }
+ion-input { --background: #f5f7f6; --padding-start: 12px !important; --padding-end: 12px !important; border: 1px solid #dce2df; border-radius: 10px; }
+.places { margin-top: 12px; display: grid; gap: 8px; }
+.places > div { display: flex; justify-content: space-between; gap: 15px; padding: 11px 13px; border: 1px solid #e3e9e6; border-radius: 10px; }
+.places strong { color: #17323a; font-weight: 600; }
+.places span { white-space: nowrap; color: #b14e34; }
+.message { padding: 12px 14px; background: #fff5e9; border-left: 4px solid #d68b3f; border-radius: 7px; color: #6c4a28; }
+.history-list, .badges { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0; }
+.photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 9px; margin-top: 16px; }
+.history-photo { width: 100%; aspect-ratio: 1.2; object-fit: cover; border-radius: 9px; }
+.empty-card { padding: 30px; background: #fff; border: 1px solid #dce2df; border-radius: 17px; }
+.empty-card h2 { margin-top: 0; }
+
+@media (max-width: 650px) {
+  .layout { width: min(100% - 24px, 1120px); padding-top: 22px; }
+  .intro { align-items: flex-start; }
+  .intro h1 { font-size: 2.3rem; }
+  .two-col { grid-template-columns: 1fr; }
+  .map-frame { height: 340px; }
+  .topbar ion-title span { font-size: 0.85rem; }
+}
