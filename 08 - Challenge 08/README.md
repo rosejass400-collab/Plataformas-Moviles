@@ -83,7 +83,7 @@ Publica solo la carpeta `dist` en un servicio de alojamiento estático, por ejem
 
 En Supabase configura la dirección HTTPS publicada como **Site URL** y agrégala a **Redirect URLs**. Esto permite volver a la app después de confirmar el correo. La dirección `127.0.0.1` solo sirve en el computador donde corre el servidor local.
 
-La entrega del código debe integrarse desde `challenge-08` hacia `main`, en `Corte 2/08 - Challenge 08`. La carpeta de Challenge 07 se conserva sin modificaciones.
+El código está en `08 - Challenge 08`, en la raíz del repositorio. La carpeta de Challenge 07 se conserva sin modificaciones.
 
 ## Verificación
 

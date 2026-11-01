@@ -1,0 +1,6 @@
+{
+  "appId": "com.jassonrosero.challenge09",
+  "appName": "Rutas",
+  "webDir": "dist",
+  "server": { "androidScheme": "https" }
+}

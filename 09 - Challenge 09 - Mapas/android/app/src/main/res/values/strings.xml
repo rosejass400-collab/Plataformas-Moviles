@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Rutas</string>
+    <string name="title_activity_main">Rutas</string>
+    <string name="package_name">com.jassonrosero.challenge09</string>
+    <string name="custom_url_scheme">com.jassonrosero.challenge09</string>
+</resources>
