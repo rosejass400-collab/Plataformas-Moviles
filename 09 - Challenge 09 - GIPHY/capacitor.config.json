@@ -1,0 +1,6 @@
+{
+  "appId": "com.jassonrosero.challenge09giphy",
+  "appName": "GIFoteca",
+  "webDir": "dist",
+  "server": { "androidScheme": "https" }
+}
