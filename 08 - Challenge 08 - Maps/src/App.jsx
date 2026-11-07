@@ -100,7 +100,7 @@ export default function App() {
 
   return (
     <IonApp>
-      <IonHeader><IonToolbar className="topbar"><IonTitle>Rutas <span>· Challenge 09</span></IonTitle></IonToolbar></IonHeader>
+      <IonHeader><IonToolbar className="topbar"><IonTitle>Rutas <span>· Challenge 08 Maps</span></IonTitle></IonToolbar></IonHeader>
       <IonContent>
         <main className="layout">
           <div className="intro">

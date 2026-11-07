@@ -1,4 +1,4 @@
-# Challenge 09 · Mapas y sensores
+# Challenge 08 · Maps
 
 Aplicación Ionic + React + Capacitor para registrar recorridos con GPS y verlos en un mapa de OpenStreetMap.
 

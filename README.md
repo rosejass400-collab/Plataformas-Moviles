@@ -12,7 +12,7 @@ Trabajos de la asignatura. Cada carpeta contiene su propia aplicación e instruc
 - `06 - Challenge 06`
 - `07 - Challenge 07`
 - `08 - Challenge 08`
-- `09 - Challenge 09 - Mapas`
+- `08 - Challenge 08 - Maps`
 
 ## Otros trabajos
 
