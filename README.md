@@ -17,6 +17,6 @@ Trabajos de la asignatura. Cada carpeta contiene su propia aplicación e instruc
 
 ## Otros trabajos
 
-- `05 - Parcial 1 - MediClinic`
+- `Parcial 1 - MediClinic`
 - `Parcial 2 - Misiones`
 - `Proyecto Final - EcoMarket`
