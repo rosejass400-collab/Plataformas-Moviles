@@ -4,7 +4,8 @@ EcoMarket es una aplicación móvil para explorar productos locales, preparar un
 
 ## Enlaces e integrantes
 
-- Prototipo en Lovable: [EcoMarket Fresh Finds](https://lovable.dev/projects/77e888ce-35e6-42de-8498-06fb11555892)
+- Prototipo público: [EcoMarket en Lovable](https://local-leaf-market.lovable.app/)
+- Proyecto de diseño en Lovable: [EcoMarket Fresh Finds](https://lovable.dev/projects/77e888ce-35e6-42de-8498-06fb11555892)
 - Código: [Plataformas-Moviles](https://github.com/rosejass400-collab/Plataformas-Moviles/tree/main/Proyecto%20Final%20-%20EcoMarket)
 - Integrante: Jasson Rosero
 - Rama de desarrollo: `proyecto-final-ecomarket`, integrada a `main` para la entrega.

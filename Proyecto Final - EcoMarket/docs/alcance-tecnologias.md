@@ -4,6 +4,8 @@
 
 EcoMarket acerca productos de productores locales a compradores mediante una aplicación móvil. El usuario consulta un catálogo, revisa los detalles, guarda productos en el carrito, registra un pedido y puede conversar con soporte. El diseño sigue el prototipo EcoMarket Fresh Finds creado en Lovable.
 
+Prototipo publicado: https://local-leaf-market.lovable.app/
+
 ## Funciones desarrolladas
 
 - Registro e inicio de sesión reales con Firebase Authentication y correo/contraseña.
@@ -43,5 +45,5 @@ Los productos iniciales y los puntos de mapa son contenido de demostración. El 
 - `npm run build`: compilación web de producción.
 - `npx cap sync android` y `gradlew assembleDebug`: preparación y compilación del APK.
 - Revisión visual de inicio, catálogo, filtro por categoría, carrito y acceso en tamaño de pantalla móvil.
-- Prueba funcional en navegador con una cuenta real del usuario: inicio de sesión, envío y persistencia del chat, registro de un pedido de prueba sin entrega y lectura del pedido en el historial.
+- Prueba funcional en navegador con una cuenta real del usuario: inicio de sesión, envío y persistencia del chat, registro de un pedido de prueba sin entrega, lectura del pedido en el historial y acceso al panel administrador con pedidos y conversaciones.
 - La cámara, la ubicación y las notificaciones se integran con Capacitor; su funcionamiento en Android se debe comprobar al instalar el APK, porque los permisos y sensores no se reproducen por completo en el navegador.
